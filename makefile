@@ -30,13 +30,13 @@ INC_DIR = include
 
 # Include directories
 INCLUDE_DIRS =	-I/usr/include \
-				-I/usr/local/include \
-				-I$(INC_DIR)
+		-I/usr/local/include \
+		-I$(INC_DIR)
 
 # Library directories
 LIB_DIRS =	-L/usr/lib \
-			-L/usr/local/lib \
-			$(GM_LIBS)
+		-L/usr/local/lib \
+		$(GM_LIBS)
 
 # Libraries to link to
 LINK_LIBS = $(GM_LINK_LIBS)
@@ -46,7 +46,7 @@ COMPILER = g++
 
 # Compiler flags
 CFLAGS = -Wall \
-		 $(GM_CFLAGS)
+	 $(GM_CFLAGS)
 
 # The source object files needed
 #   - These objects should correspond to .cpp files in the source directory that
