@@ -10,20 +10,6 @@
 using namespace std;
 
 //_____________________________________________________________________________
-void printMat(const matrix::matrix<unsigned char> &mat)
-{
-	for (size_t i = 0; i < mat.height(); ++i)
-	{
-		for (size_t j = 0; j < mat.width(); ++j)
-		{
-			printf("%3u  ", mat(i,j));
-		}
-		printf("\n");
-	}
-}
-
-
-//_____________________________________________________________________________
 int main(int argc, char **argv)
 {
 	Magick::InitializeMagick(*argv);
@@ -50,7 +36,9 @@ int main(int argc, char **argv)
 	// Image dimensions
 	size_t	nrows = image->rows(), ncols = image->columns();
 
-	matrix::matrix<unsigned char> rmat(nrows,ncols), gmat(nrows,ncols), bmat(nrows,ncols);
+	// Matrices for the image layers
+	matrix<unsigned char> rmat(nrows,ncols), gmat(nrows,ncols), bmat(nrows,ncols);
+
 	for (size_t row = 0; row < nrows; ++row)
 	{
 		for (size_t col = 0; col < ncols; ++col)
@@ -62,22 +50,30 @@ int main(int argc, char **argv)
 	}
 	delete image;
 
-	printf("image dimensions (nrows, ncols): %u %u\n", nrows, ncols);
+	int  min, max, range;
+	double mean, stdev;
+	printf("dimensions (rows, columns): %u %u\n", nrows, ncols);
 	printf("==== red layer ====\n");
-	printf("min = %u\n", matrix::min2d(rmat));
-	printf("max = %u\n", matrix::max2d(rmat));
-	printf("mean = %f\n", matrix::mean2d(rmat));
-	printf("stdev = %f\n", matrix::stdev2d(rmat,true));
+	printf("min = %u\n", min = matrixmath::min2d(rmat));
+	printf("max = %u\n", max = matrixmath::max2d(rmat));
+	printf("range = %u\n",range = max - min);
+	printf("mean = %f\n", mean = matrixmath::mean2d(rmat));
+	printf("stdev = %f\n", stdev = matrixmath::stdev2d(rmat,true));
+	printf("stdev/range = %f\n", stdev/range);
 	printf("==== green layer ====\n");
-	printf("min = %u\n", matrix::min2d(gmat));
-	printf("max = %u\n", matrix::max2d(gmat));
-	printf("mean = %f\n", matrix::mean2d(gmat));
-	printf("stdev = %f\n", matrix::stdev2d(gmat,true));
+	printf("min = %u\n", min = matrixmath::min2d(gmat));
+	printf("max = %u\n", max = matrixmath::max2d(gmat));
+	printf("range = %u\n",range = max - min);
+	printf("mean = %f\n", mean = matrixmath::mean2d(gmat));
+	printf("stdev = %f\n", stdev = matrixmath::stdev2d(gmat,true));
+	printf("stdev/range = %f\n", stdev/range);
 	printf("==== blue layer ====\n");
-	printf("min = %u\n", matrix::min2d(bmat));
-	printf("max = %u\n", matrix::max2d(bmat));
-	printf("mean = %f\n", matrix::mean2d(bmat));
-	printf("stdev = %f\n", matrix::stdev2d(bmat,true));
+	printf("min = %u\n", min = matrixmath::min2d(bmat));
+	printf("max = %u\n", max = matrixmath::max2d(bmat));
+	printf("range = %u\n",range = max - min);
+	printf("mean = %f\n", mean = matrixmath::mean2d(bmat));
+	printf("stdev = %f\n", stdev = matrixmath::stdev2d(bmat,true));
+	printf("stdev/range = %f\n", stdev/range);
 
 	return EXIT_SUCCESS;
 }

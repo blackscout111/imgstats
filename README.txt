@@ -2,11 +2,10 @@
 // README for imgstats
 ////////////////////////////////////////////////////////////////////////////////
 
-====
+================================================================================
 Install Graphics Magick
 (on ubuntu 11.04)
-====
-
+================================================================================
 - go to "http://sourceforge.net/projects/graphicsmagick/files/graphicsmagick/1.3.12/l"
 - download "GraphicsMagick-1.3.12.tar.gz"
 - extract it to "~/GraphicsMagick-1.3.12/"
@@ -24,10 +23,9 @@ Install Graphics Magick
 
 - DONE
 
-====
+================================================================================
 Building the Project
-====
-
+================================================================================
 - Make sure that you have the following environment variables set in order
   to compile and run this project
 
@@ -40,3 +38,11 @@ Building the Project
 
 - DONE
 
+================================================================================
+Using the Project
+================================================================================
+- Peform the following action:
+
+	./imgstats.exe [IMAGE_FILE_NAME]
+
+- The statistics will be displayed in the terminal window.
