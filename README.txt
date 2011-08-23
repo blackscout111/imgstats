@@ -1,6 +1,30 @@
 ////////////////////////////////////////////////////////////////////////////////
 // README for imgstats
 ////////////////////////////////////////////////////////////////////////////////
+================================================================================
+Install Xserver-Xorg
+================================================================================
+- You should have the following packages installed:
+	
+	xorg
+	xorg-dev
+	xfonts-100dpi	# These fonts should be installed to "/usr/share/fonts/X11"
+	xfonts-75dpi
+
+- You can get these by useing the following command:
+
+	sudo aptitude install [PACKAGE_NAME]
+
+- Make sure that the 100 and 75 dpi fonts are in your xserver fontpath.
+- You can check the font path wiht the following command:
+
+	xset -q
+
+- You can add both of those fonts to the path with the following commands:
+
+	xset +fp /usr/share/fonts/X11/100dpi
+	xset +fp /usr/share/fonts/X11/75dpi
+
 
 ================================================================================
 Install Graphics Magick
@@ -12,7 +36,7 @@ Install Graphics Magick
 - Perform the following:
 
 	cd ~/GraphicsMagick-1.3.12/
-	./configure --with-quantum-depth=8	# This will install it to "usr/local"
+	./configure --with-x --with-quantum-depth=8	# This will install it to "usr/local"
 	make
 	sudo make install
 	make check (This one is optional)

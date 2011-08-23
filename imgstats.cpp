@@ -22,6 +22,7 @@ int main(int argc, char **argv)
 	// We're using 8 bit colors
 	assert(MaxRGB == 255);
 
+	printf("loading image... ");
 	try 
 	{
 		// Read a file into image object
@@ -32,13 +33,14 @@ int main(int argc, char **argv)
 		cout << "Caught exception: " << error_.what() << endl;
 		return EXIT_FAILURE;
 	}
+	printf("done\n");
 
 	// Image dimensions
+	printf("getting image pixel data... ");
 	size_t	nrows = image->rows(), ncols = image->columns();
 
 	// Matrices for the image layers
 	matrix<unsigned char> rmat(nrows,ncols), gmat(nrows,ncols), bmat(nrows,ncols);
-
 	for (size_t row = 0; row < nrows; ++row)
 	{
 		for (size_t col = 0; col < ncols; ++col)
@@ -48,11 +50,17 @@ int main(int argc, char **argv)
 			bmat(row,col) = (unsigned char)image->pixelColor(row, col).blueQuantum();
 		}
 	}
+	printf("done\n");
+	
+	// Free the image from memory
+	printf("freeing image memory... ");
 	delete image;
+	printf("done\n");
 
 	int  min, max, range;
 	double mean, stdev;
 	printf("dimensions (rows, columns): %u %u\n", nrows, ncols);
+	printf("number of pixels: %u\n", nrows*ncols);
 	printf("==== red layer ====\n");
 	printf("min = %u\n", min = matrixmath::min2d(rmat));
 	printf("max = %u\n", max = matrixmath::max2d(rmat));
