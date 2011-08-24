@@ -19,6 +19,13 @@ GM_LIBS = $(shell GraphicsMagick++-config --ldflags)
 GM_LINK_LIBS = $(shell GraphicsMagick++-config --libs)
 
 #===============================================================================
+# ROOT macros
+#===============================================================================
+ROOT_CFLAGS = $(shell root-config --cflags)
+ROOT_LIBS = $(shell root-config --ldflags)
+ROOT_LINK_LIBS = $(shell root-config --libs)
+
+#===============================================================================
 # Standard macros
 #===============================================================================
 
@@ -36,17 +43,20 @@ INCLUDE_DIRS =	-I/usr/include \
 # Library directories
 LIB_DIRS =	-L/usr/lib \
 		-L/usr/local/lib \
-		$(GM_LIBS)
+		$(GM_LIBS) \
+		$(ROOT_LIBS)
 
 # Libraries to link to
-LINK_LIBS = $(GM_LINK_LIBS)
+LINK_LIBS = $(GM_LINK_LIBS) \
+		$(ROOT_LINK_LIBS)
 
 # The compiler
 COMPILER = g++
 
 # Compiler flags
 CFLAGS = -Wall \
-	 $(GM_CFLAGS)
+	 $(GM_CFLAGS) \
+	 $(ROOT_CFLAGS)
 
 # The source object files needed
 #   - These objects should correspond to .cpp files in the source directory that

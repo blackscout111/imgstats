@@ -5,9 +5,113 @@
 
 #include <Magick++.h>
 
-#include "matrix/matrixmath.h"
+#include <TROOT.h>
+#include <TApplication.h>
+#include <TStyle.h>
+#include <TH1F.h>
+#include <TMath.h>
+#include <TRandom.h>
+#include <TCanvas.h>
+#include <TGraph.h>
 
 using namespace std;
+
+//_____________________________________________________________________________
+// This function starts ROOT. The pointer returned should be used to stop the
+// application and also be deleted before program completion. This is don via
+// the "Terminate" method or by calling the "Run" method with a value of "kTRUE"
+// as the input parameter.
+void initROOT(const char* appClassName)
+{
+	// Initialize the root application
+	Int_t argv = 0;
+	char** argc = NULL;
+	new TApplication(appClassName, &argv, argc, NULL, 0);
+
+	//======= Set the style of plots ============
+	// Set the canvas style used
+	gROOT->SetStyle("Plain");		// Start using the plain style
+	gStyle->SetPalette(1);			// Get access to a fancy color palette
+	gStyle->SetOptStat(1);			// Show/Remove the stats box
+
+	// Set some title properties
+	gStyle->SetTitleW(0.5);
+	gStyle->SetTitleH(0.07);
+	gStyle->SetTitleX(0.25);
+	gStyle->SetTitleBorderSize(0);
+
+
+	gROOT->ForceStyle();
+    //============================================
+}
+
+
+//_____________________________________________________________________________
+void dispImgStats(const Magick::Image* image)
+{
+
+	// Initialize ROOT
+	initROOT("imgstats");
+
+    // Histogram criteria
+    TH1F	*rhist = NULL,
+			*ghist = NULL,
+			*bhist = NULL;
+
+	// Canvases
+	TCanvas *rcan = new TCanvas("rcan");
+	TCanvas *gcan = new TCanvas("gcan");
+	TCanvas *bcan = new TCanvas("bcan");
+
+    // Make the histograms
+    rhist = new TH1F("rhist", "Red Layer", 256, 0, 255);
+    rhist->GetXaxis()->SetTitle("Pixel Intensity");
+	rhist->GetYaxis()->SetTitle("# of Pixels");
+    ghist = new TH1F("ghist", "Green Layer", 256, 0, 255);
+    ghist->GetXaxis()->SetTitle("Pixel Intensity");
+	ghist->GetYaxis()->SetTitle("# of Pixels");
+    bhist = new TH1F("bhist", "Blue Layer", 256, 0, 255);
+    bhist->GetXaxis()->SetTitle("Pixel Intensity");
+	bhist->GetYaxis()->SetTitle("# of Pixels");
+
+    // Fill the histograms
+	// Image dimensions
+	printf("getting image pixel data... ");
+	size_t	nrows = image->rows(), ncols = image->columns();
+	Magick::Color tmpColor;
+
+	for (size_t row = 0; row < nrows; ++row)
+	{
+		for (size_t col = 0; col < ncols; ++col)
+		{
+			tmpColor = image->pixelColor(row,col);
+			rhist->Fill(tmpColor.redQuantum());
+			ghist->Fill(tmpColor.greenQuantum());
+			bhist->Fill(tmpColor.blueQuantum());
+		}
+	}
+	printf("done\n");
+
+    // Draw the histograms
+	rhist->SetLineColor(kRed);
+	ghist->SetLineColor(kGreen);
+	bhist->SetLineColor(kBlue);
+	rcan->cd();
+    rhist->Draw("");
+	gcan->cd();
+    ghist->Draw("");
+	bcan->cd();
+    bhist->Draw("");
+
+	// Program will pause at this next line until you go File->Exit from the X11 screen
+	printf("In the X11 window...\n go to File-->\"Close Canvas\" to close\n");
+	gApplication->Run(kTRUE);
+
+    // Delete the histograms
+    delete rhist;
+    delete ghist;
+    delete bhist;
+}
 
 //_____________________________________________________________________________
 int main(int argc, char **argv)
@@ -34,54 +138,14 @@ int main(int argc, char **argv)
 		return EXIT_FAILURE;
 	}
 	printf("done\n");
-
-	// Image dimensions
-	printf("getting image pixel data... ");
-	size_t	nrows = image->rows(), ncols = image->columns();
-
-	// Matrices for the image layers
-	matrix<unsigned char> rmat(nrows,ncols), gmat(nrows,ncols), bmat(nrows,ncols);
-	for (size_t row = 0; row < nrows; ++row)
-	{
-		for (size_t col = 0; col < ncols; ++col)
-		{
-			rmat(row,col) = (unsigned char)image->pixelColor(row, col).redQuantum();
-			gmat(row,col) = (unsigned char)image->pixelColor(row, col).greenQuantum();
-			bmat(row,col) = (unsigned char)image->pixelColor(row, col).blueQuantum();
-		}
-	}
-	printf("done\n");
 	
+	// Display the histograms
+	dispImgStats(image);
+
 	// Free the image from memory
 	printf("freeing image memory... ");
 	delete image;
 	printf("done\n");
-
-	int  min, max, range;
-	double mean, stdev;
-	printf("dimensions (rows, columns): %u %u\n", nrows, ncols);
-	printf("number of pixels: %u\n", nrows*ncols);
-	printf("==== red layer ====\n");
-	printf("min = %u\n", min = matrixmath::min2d(rmat));
-	printf("max = %u\n", max = matrixmath::max2d(rmat));
-	printf("range = %u\n",range = max - min);
-	printf("mean = %f\n", mean = matrixmath::mean2d(rmat));
-	printf("stdev = %f\n", stdev = matrixmath::stdev2d(rmat,true));
-	printf("stdev/range = %f\n", stdev/range);
-	printf("==== green layer ====\n");
-	printf("min = %u\n", min = matrixmath::min2d(gmat));
-	printf("max = %u\n", max = matrixmath::max2d(gmat));
-	printf("range = %u\n",range = max - min);
-	printf("mean = %f\n", mean = matrixmath::mean2d(gmat));
-	printf("stdev = %f\n", stdev = matrixmath::stdev2d(gmat,true));
-	printf("stdev/range = %f\n", stdev/range);
-	printf("==== blue layer ====\n");
-	printf("min = %u\n", min = matrixmath::min2d(bmat));
-	printf("max = %u\n", max = matrixmath::max2d(bmat));
-	printf("range = %u\n",range = max - min);
-	printf("mean = %f\n", mean = matrixmath::mean2d(bmat));
-	printf("stdev = %f\n", stdev = matrixmath::stdev2d(bmat,true));
-	printf("stdev/range = %f\n", stdev/range);
 
 	return EXIT_SUCCESS;
 }
