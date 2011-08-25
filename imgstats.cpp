@@ -136,7 +136,7 @@ void dispImgStats(const Magick::Image* image)
 	bhist->Draw();
 
 	// Program will pause at this next line until you go File->Exit from the X11 screen
-	printf("In an X11 window go to File-->\"Close Canvas\" to close\n");
+	printf("go to File-->\"Quit ROOT\" to continue...\n");
 	gApplication->Run(kTRUE);
 
 	// Delete the canvases
@@ -163,37 +163,37 @@ int main(int argc, char **argv)
 	// We're using 8 bit colors
 	assert(MaxRGB == 255);
 
-	printf("loading image... ");
-	try 
+	// Read a file into image object
+	if (argc == 2)
 	{
-		// Read a file into image object
-		if (argc == 2)
+		printf("loading image... ");
+		try 
 		{
-			image = new Magick::Image;
-			image->read(argv[1]);
+				image = new Magick::Image;
+				image->read(argv[1]);
 		}
-		else
+		catch(Magick::Exception &error_)
 		{
-			printf("Incorrect number of input parameters.\n");
-			printf("Usage:\n\n\t./imgstats [FILE NAME]\n");
+			cout << "Caught exception: " << error_.what() << endl;
+			return EXIT_FAILURE;
 		}
-	}
-	catch(Magick::Exception &error_)
-	{
-		cout << "Caught exception: " << error_.what() << endl;
-		return EXIT_FAILURE;
-	}
-	printf("done\n");
-	
-	// Display the histograms
-	if (image)
-	{
-		dispImgStats(image);
-
-		// Free the image from memory
-		printf("freeing image memory... ");
-		delete image;
 		printf("done\n");
+		
+		// Display the histograms
+		if (image)
+		{
+			dispImgStats(image);
+
+			// Free the image from memory
+			printf("freeing image memory... ");
+			delete image;
+			printf("done\n");
+		}
+	}
+	else
+	{
+		printf("Incorrect number of input parameters.\n");
+		printf("Usage:\n\n\t./imgstats [FILE NAME]\n\n");
 	}
 
 	return EXIT_SUCCESS;
