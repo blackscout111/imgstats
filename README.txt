@@ -16,7 +16,7 @@ Install Xserver-Xorg
 	sudo aptitude install [PACKAGE_NAME]
 
 - Make sure that the 100 and 75 dpi fonts are in your xserver fontpath.
-- You can check the font path wiht the following command:
+- You can check the font path with the following command:
 
 	xset -q
 
@@ -36,7 +36,7 @@ Install Graphics Magick
 - Perform the following:
 
 	cd ~/GraphicsMagick-1.3.12/
-	./configure --with-x --with-quantum-depth=8	# This will install it to "usr/local"
+	./configure --with-x --with-quantum-depth=8	#cd This will install it to "usr/local"
 	make
 	sudo make install
 	make check (This one is optional)
@@ -48,7 +48,8 @@ Install Graphics Magick
 - DONE
 
 #===============================================================================
-Installing ROOT
+Installing ROOT Prerequisits
+(on ubuntu 11.04)
 #===============================================================================
 - Prerequisit "optional" packages (not actually optional):
 
@@ -60,11 +61,36 @@ Installing ROOT
 
 	sudo aptitude install [PACKAGE_NAME]
 
+-  DONE
+
+#===============================================================================
+Installing ROOT Prerequisits
+(on fedora 16)
+#===============================================================================
+- Prerequisit packages:
+    
+    libXpm-devel
+    libXft-devel
+    libXext-devel
+	gsl-devel
+	glew-devel
+	fftw-devel
+	
+- You can get these by useing the following command:
+
+	sudo yum install [PACKAGE_NAME]
+
+-  DONE
+
+#===============================================================================
+Installing ROOT Prerequisits
+#===============================================================================
+
 - Once the prequisit packages are installed go to
 	
-	"http://root.cern.ch/drupal/content/production-version-530"
+	"http://root.cern.ch/drupal/content/production-version-532"
 
-- Scroll down near the bottom and download "ROOT 5.30/01 complete source tree"
+- Scroll down near the bottom and download "ROOT 5.32.03 complete source tree"
 - Extract the file to "~/root"
 - Perform the following actions:
 
@@ -72,12 +98,12 @@ Installing ROOT
     ./configure --help > configure_help # This outputs the configuration
 										# help/settings/arguments to a file.
     ./configure --enable-gdml --enable-mathmore --enable-opengl --enable-python --enable-tmva --enable-minuit2 --enable-fftw3 
-    make -j # This takes a long time (  >30 min)
+    make -j 2 # This takes a long time (  >30 min)
     . bin/thisroot.sh
 
 - Try running ROOT by performing the following action:
 
-    root
+    root                
 
 - If all went well root should start.  Close it with the command ".q".
 
